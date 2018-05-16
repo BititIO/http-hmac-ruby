@@ -74,7 +74,7 @@ module Acquia
           host: request.host_with_port,
           query_string: request.query_string,
           http_method: request.request_method,
-          path_info: request.path_info,
+          path_info: request.path,
           content_type: request.content_type,
           body_hash: env['HTTP_X_AUTHORIZATION_CONTENT_SHA256'],
           timestamp: env['HTTP_X_AUTHORIZATION_TIMESTAMP'].to_i,
