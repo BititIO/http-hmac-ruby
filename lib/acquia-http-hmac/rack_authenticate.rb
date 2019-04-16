@@ -11,20 +11,17 @@ module Acquia
         @realm = options[:realm]
         @nonce_checker = options[:nonce_checker]
         @excluded_paths = options[:excluded_paths]
-        @path_whitelist = options[:path_whitelist]
+        @whitelisted_paths = options[:whitelisted_paths]
         @app = app
-        if @excluded_paths && @path_whitelist
-          raise ':excluded_paths and :path_whitelist are exclusive'
+        if @excluded_paths && @whitelisted_paths
+          raise ':excluded_paths and :whitelisted_paths are exclusive'
         end
       end
 
       def call(env)
         # Skip paths based on a list of prefixes.
-        if (
-            @excluded_paths && env['PATH_INFO'].start_with?(*@excluded_paths)
-          or
-            @path_whitelist && !env['PATH_INFO'].start_with?(*@path_whitelist)
-        )
+        if (@excluded_paths && env['PATH_INFO'].start_with?(*@excluded_paths)) ||
+            (@whitelisted_paths && !env['PATH_INFO'].start_with?(*@whitelisted_paths))
           return @app.call(env)
         end
         auth_header = env['HTTP_AUTHORIZATION'].to_s
